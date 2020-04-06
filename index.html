@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>css add on project</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <!--
+            overview
+            syntax
+            specificity
+                think of a point system
+                0,0,0,0
+                with first being the 1000 place, next one 100, and so forth
+                each time you add a "point" to the place it has higher specificity
+                Order is:
+                    Inline styles-
+                    IDs-
+                    Classes, attributes, pseudo-classes - .classes, [attributes], psuedo-classes like :hover
+                    Elements, psuedo-elements - h1 etc, and psuedo-elements like :before or :after etc
+                if you had 0 inline selectors, 0 id selector, 13 class, psuedo, and attribute selectors, and 2 elements
+                specificity would be 0,0,13,2
+            selectors
+                simple selectors (name, id, class)
+                    h1 {}, element name selector
+                    h1, p, div {}, is a group of name selectors
+                    #div1 {}, id selector
+                    .class-name {}, class selector
+                    .class-name.class2-name {}, find elements that have both of these classes
+                    * {}, selects all elements
+                combinator selectors (select elements based on a specific relationship between them), the combinator explains the relationship
+                    descendant selector(space)
+                        div p {}, selects all paragraphs that are children of a div
+                    child selector(>)
+                        div > p {}, selects all paragraphs that are children of a div
+                    adjacent sibling selector(+), aka only first matching sibling, css sibling means element after an element
+                        div + p {}, selects first p element after a div
+                    general sibling selector(~)
+                        div ~ p {}, selects all p elements that come after a div that are siblings, aka nested same level
+                pseudo-class selectors (select elements based on state or that meets the selector condition)
+                    order matters, you may need to put things in a certain order, like having active after hover
+                    can be combined with simple class selectors
+                        a.class-name:hover
+                    all psuedo-class selectors and examples
+                        :active	a:active	Selects the active link, aka when you click down like onmousedown 
+                        :checked	input:checked	Selects every checked <input> element, radio and checkbox elements
+                        :disabled	input:disabled	Selects every disabled <input> element
+                        :empty	p:empty	Selects every <p> element that has no children, including text nodes
+                        :enabled	input:enabled	Selects every enabled <input> element
+                        :first-child	p:first-child	Selects every <p> elements that is the first child of its parent
+                        :first-of-type	p:first-of-type	Selects every <p> element that is the first <p> element of its parent
+                        :focus	input:focus	Selects the <input> element that has focus
+                        :hover	a:hover	Selects links on mouse over
+                        :in-range	input:in-range	Selects <input> elements with a value within a specified range
+                        :indeterminate	input:indeterminate	Selects input elements that are in an indeterminate state, need to set things to indeterminate with the object in question being set, objectName.indeterminate = true;
+                        :invalid	input:invalid	Selects all <input> elements with an invalid value
+                        :lang(language)	p:lang(it)	Selects every <p> element with a lang attribute value starting with "it"
+                        :last-child	p:last-child	Selects every <p> elements that is the last child of its parent
+                        :last-of-type	p:last-of-type	Selects every <p> element that is the last <p> element of its parent
+                        :link	a:link	Selects all unvisited links
+                        :not(selector)	:not(p)	Selects every element that is not a <p> element
+                        :nth-child(n)	p:nth-child(2)	Selects every <p> element that is the second child of its parent
+                        :nth-last-child(n)	p:nth-last-child(2)	Selects every <p> element that is the second child of its parent, counting from the last child
+                        :nth-last-of-type(n)	p:nth-last-of-type(2)	Selects every <p> element that is the second <p> element of its parent, counting from the last child
+                        :nth-of-type(n)	p:nth-of-type(2)	Selects every <p> element that is the second <p> element of its parent
+                        :only-of-type	p:only-of-type	Selects every <p> element that is the only <p> element of its parent
+                        :only-child	p:only-child	Selects every <p> element that is the only child of its parent
+                        :optional	input:optional	Selects <input> elements with no "required" attribute
+                        :out-of-range	input:out-of-range	Selects <input> elements with a value outside a specified range
+                        :read-only	input:read-only	Selects <input> elements with a "readonly" attribute specified
+                        :read-write	input:read-write	Selects <input> elements with no "readonly" attribute
+                        :required	input:required	Selects <input> elements with a "required" attribute specified
+                        :root	root	Selects the document's root element
+                        :target	#news:target	Selects the current active #news element, styles the current active target element like when you click on something
+                        :valid	input:valid	Selects all <input> elements with a valid value
+                        :visited	a:visited	Selects all visited links
+                psuedo-elements selectors (select and style part of an element, or place things before or after element)
+                    have double colons ::
+                    all psuedo-element selectors
+                            ::after	p::after	Insert content after every <p> element
+                            ::before	p::before	Insert content before every <p> element
+                            ::first-letter	p::first-letter	Selects the first letter of every <p> element
+                            ::first-line	p::first-line	Selects the first line of every <p> element
+                            ::selection	p::selection	Selects the portion of an element that is selected by a user
+                            ::placeholder	input::placeholder	Selects input elements with the "placeholder" attribute specified
+                attribute selectors (select elements based on attribute name or value)
+                    can be combined with other selectors 
+                    [attribute]	[target]	Selects all elements with a target attribute
+                    [attribute=value]	[target=_blank]	Selects all elements with target="_blank"
+                                a[target=_blank] {
+                                    background-color: yellow;
+                                }
+                                input[type=text]:focus {
+                                    width: 250px;
+                                }
+                                div[class=cool-class] {
+                                    color: blue;
+                                }
+                    [attribute~=value]	[title~=flower]	Selects all elements with a title attribute CONTAINING the word "flower", must be a space seperated word and spelled exactly, won't match "flowers" or "red-flower", will match "wild flower"
+                    [attribute|=value]	[title|=top]	Selects all elements with a title attribute value STARTING with "top", must be spelled exactly and may contain a hyphen after, will match "top-text" 
+                    [attribute^=value]	a[href^="https"]	Selects every <a> element whose href attribute value begins with "https"
+                    [attribute$=value]	a[href$=".pdf"]	Selects every <a> element whose href attribute value ends with ".pdf"
+                    [attribute*=value]	a[href*="w3schools"]	Selects every <a> element whose href attribute value contains the substring "w3schools" 
+            !important declaration- overrides all, can still be overridden by more specific !important
+                    .className {
+                        color: orange !important;
+                    }
+            media queries
+                @media not|only mediatype and (expressions) {
+                    CSS-Code;
+                } 
+                    not|only is optional, 
+                    mediatype default is all if you don't use not|only
+                    mediattypes
+                        all, all media types
+                        print, used for printers
+                        screen, any type of screen phone, desktop, etc
+                        speach, used for screenreaders
+                    @media screen and (min-width: 480px) {
+                        body {
+                            background-color: lightgreen;
+                        } 
+                    }
+                    @media screen and (min-width: 480px) {
+                        #leftsidebar { width: 200px; float: left; }
+                        #main { margin-left: 216px; }
+                    }
+                    min-width means at 480px, etc
+                for specific or multiple stylesheets
+                    <link rel="stylesheet" media="mediatype and|not|only (expressions)" href="print.css">
+            variables
+                variables are declared inside a scope defining where they can be used, do that with a psuedo-class
+                :root {--custom-name: value;}
+                    here the psuedo-class :root is used so the variables are available over the whole document
+                var(--custom-name);
+                    this is how you use the variable and it's value
+                fallback value, is optional 
+                var(--custom-name, red, nextfallback) red here is the fallback
+                   :root {
+                        --main-bg-color: coral;
+                        --main-txt-color: blue;
+                        --main-padding: 15px;
+                    }
+
+                    #div1 {
+                        background-color: var(--main-bg-color);
+                        color: var(--main-txt-color);
+                        padding: var(--main-padding);
+                    }
+
+                    #div2 {
+                        background-color: var(--main-bg-color);
+                        color: var(--main-txt-color);
+                        padding: var(--main-padding);
+                    } 
+            position
+                5 values
+                static, normal flow, default and does not need to be set 
+                relative, positioned relative to its normal flow, OTHER content will NOT adjust to fill the gap
+                    div.relative {
+                        position: relative;
+                        left: 30px;
+                        border: 3px solid #73AD21;
+                    }
+                fixed, fixed relative to the current VIEWPORT
+                    div.fixed {
+                        position: fixed;
+                        bottom: 0;
+                        right: 0;
+                        width: 300px;
+                        border: 3px solid #73AD21;
+                    }
+                absolute, 
+                    is positioned relative to the nearest positioned ancestor (instead of positioned relative to the viewport, like fixed).
+                    meaning it grabs the nearest ancestor with the position property set
+                    otherwise will use the default body and move along with the page as it scrolls,
+                    you can give a position relative to an ancestor without offsetting it so you can use absolute
+                sticky
+                    A sticky element toggles between relative and fixed, depending on the scroll position. 
+                    It is positioned relative until a given offset position is met in the viewport - then it "sticks" in place (like position:fixed).
+                positioning properties
+                    bottom	Sets the bottom margin edge for a positioned box
+                    clip	Clips an absolutely positioned element
+                    left	Sets the left margin edge for a positioned box
+                    position	Specifies the type of positioning for an element
+                    right	Sets the right margin edge for a positioned box
+                    top	Sets the top margin edge for a positioned box
+                    z-index	Sets the stack order of an element
+         -->
+    </body>
+</html>
